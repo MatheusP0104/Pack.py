@@ -5,6 +5,7 @@ from packdata import *
 class Backend:
     def __init__(self):
         self.Data = Data_Verificar()
+        self.conta = Conta()
 
     def Mostrar_senha(self, senha):
         if senha.cget('show') == '*':
@@ -44,4 +45,26 @@ class Backend:
             frame_cli.forget()
         else:
             messagebox.showerror('Acesso Negado', 'conta desconhecida, tente novamente')
+    
+    def Saque(self, cpf, saldo, frame1, frame2, en_saque):
+        if self.conta.verifica(cpf, saldo):
+            self.conta.saque(cpf, saldo)
+            messagebox.showinfo('Saque Aceito', f'O valor de R${saldo} foi retirado da sua conta!')
+            frame1.pack()
+            frame2.forget()
+            en_saque.delete(0, 'end')
+        else:
+            messagebox.showerror('Saque Negado','Saldo insuficiente!')
+            frame1.pack()
+            frame2.forget()
+            en_saque.delete(0, 'end')
+
+    def Depo(self,cpf, saldo, frame1, frame2, en_depo):
+        self.conta.deposito(cpf, saldo)
+        messagebox.showinfo('Depositar', f'O valor de R${saldo} foi adicionado na sua conta!')
+        frame1.pack()
+        frame2.forget()
+        en_depo.delete(0, 'end')
+        
+        
 

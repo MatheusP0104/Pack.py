@@ -8,6 +8,7 @@ class Data_Verificar:
         self.cursor = self.conectar.cursor()
         self.func = ''
         self.cli = ''
+        self.saq = ''
 
     def Cadastrar(self, cpf, nome, data, genero, email, senha,saldo):
         # realiza o cadastro no banco de dados
@@ -54,9 +55,26 @@ class Conta:
         nome = nominho
         return nome
 
-    def atualizar(self, cpf, saldo):
+    def deposito(self, cpf, saldo):
         self.cursor.execute(f'UPDATE cliente SET saldo = saldo + {float(saldo)} WHERE cpf = "{cpf}" ')
         self.conectar.commit()
+
+    def saque(self, cpf, saldo):
+        self.cursor.execute(f'UPDATE cliente SET saldo = saldo - {float(saldo)} WHERE cpf = "{cpf}" ')
+        self.conectar.commit()
+
+    def verifica(self, cpf, saq):
+        self.cursor.execute(f'SELECT saldo FROM cliente WHERE cpf = "{cpf}" ')
+        self.saq = self.cursor.fetchall()
+        verifica = False
+        for dindin in self.saq:
+            if float(dindin[0]) < float(saq):
+                verifica =  True
+        if verifica:
+            return False
+        else:
+            return True
+
     def Close(self):
         self.cursor.close()
         self.conectar.close()
